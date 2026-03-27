@@ -1,0 +1,42 @@
+/* Topbar.css */
+
+/* Topbar.css */
+.topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 60px;
+  font-family: "Nunito", sans-serif;
+  background-color: #1976d2;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 1300;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: left 0.3s ease-in-out;
+}
+
+.topbar.mobile-open {
+  left: 0; /* if sidebar is hidden on mobile */
+}
+
+.topbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.topbar .menu-button {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .topbar .menu-button {
+    display: block;
+  }
+
+  .topbar .logo {
+    font-size: 1.2rem;
+  }
+}

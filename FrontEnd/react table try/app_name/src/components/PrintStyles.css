@@ -1,0 +1,148 @@
+/* Modern Print Styles */
+@media print {
+  @page {
+    margin: 1.5cm 1cm;
+    size: A4 portrait;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: #2c3e50;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Report Container */
+  .report-wrapper {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-inside: auto !important;
+  }
+
+  .report-container {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 0 30px 0 !important;
+    background: white !important;
+  }
+
+  /* Header Styling */
+  .report-header {
+    margin-bottom: 25px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 2.5px solid #3498db !important;
+    break-inside: avoid !important;
+  }
+
+  .report-header h2 {
+    color: #2c3e50 !important;
+    font-size: 24pt !important;
+    margin-bottom: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  .report-header p {
+    color: #34495e !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+    margin: 4px 0 !important;
+  }
+
+  /* Table Container */
+  .table-container {
+    margin: 20px 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Table Styling */
+  .report-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 10px !important;
+  }
+
+  /* Table Header */
+  .report-table thead {
+    display: table-header-group !important;
+  }
+
+  .report-table th {
+    background-color: #f8f9fa !important;
+    color: #2c3e50 !important;
+    border-bottom: 2px solid #3498db !important;
+    padding: 12px 8px !important;
+    font-size: 11pt !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Table Body */
+  .report-table tbody {
+    break-inside: auto !important;
+  }
+
+  .report-table tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .report-table td {
+    border-bottom: 1px solid #e8e8e8 !important;
+    padding: 10px 8px !important;
+    font-size: 10pt !important;
+    color: #2c3e50 !important;
+  }
+
+  /* Zebra Striping */
+  .report-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa !important;
+  }
+
+  /* Footer Row */
+  .report-table tfoot {
+    display: table-footer-group !important;
+  }
+
+  .report-table tfoot tr {
+    background-color: #f1f7fc !important;
+  }
+
+  .report-table tfoot td {
+    border-top: 2.5px solid #3498db !important;
+    border-bottom: none !important;
+    font-weight: 600 !important;
+    font-size: 11pt !important;
+    padding: 12px 8px !important;
+    color: #2c3e50 !important;
+  }
+
+  /* Data Formatting */
+  .report-table td[data-type="number"] {
+    font-family: "Courier New", monospace !important;
+  }
+
+  .report-table td[data-type="date"] {
+    font-family: "Arial", sans-serif !important;
+  }
+
+  /* Force colors to print */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide non-print elements */
+  .no-print,
+  button,
+  .MuiDrawer-root,
+  .MuiAppBar-root {
+    display: none !important;
+  }
+}
