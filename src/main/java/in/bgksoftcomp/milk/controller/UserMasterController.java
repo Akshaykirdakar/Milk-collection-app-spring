@@ -24,7 +24,6 @@ import in.bgksoftcomp.milk.services.UserMasterService;
 
 @RestController
 @RequestMapping("/milk/user")
-@CrossOrigin("http://localhost:3000/")
 public class UserMasterController {
 
 	@Autowired

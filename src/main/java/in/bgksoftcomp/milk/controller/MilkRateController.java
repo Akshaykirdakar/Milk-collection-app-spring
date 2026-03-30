@@ -23,7 +23,6 @@ import in.bgksoftcomp.milk.services.RateSlabService;
 
 @RestController
 @RequestMapping("/api/rates")
-@CrossOrigin("http://localhost:3000/")
 public class MilkRateController {
 
     @Autowired
