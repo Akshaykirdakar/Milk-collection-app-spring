@@ -1,0 +1,471 @@
+.userlist-container {
+  padding: 20px;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: #fafafa;
+  border-radius: 4px;
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.2);
+}
+
+.userlist-header {
+  display: flex;
+  align-items: center; /* Aligns button and title vertically */
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.userlist-title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  font-family: "Nunito", sans-serif;
+  line-height: 1.2; /* Matches header height */
+text-transform: uppercase;
+}
+
+.btn-add-user {
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 8px 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 2.5rem; /* Ensures button height roughly matches h2 */
+  display: flex;
+  align-items: center;
+}
+.btn-add-user:hover {
+  background-color: gray;
+}
+
+
+.userlist-title {
+  margin-bottom: 16px;
+  font-weight: 500;
+  font-size: 1.5rem;
+  font-family: "Nunito", sans-serif;
+}
+
+.userlist-search {
+  padding: 8px 12px;
+  font-size: 1rem;
+  width: 300px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline-offset: 2px;
+  transition: border-color 0.3s ease;
+  font-family: "Nunito", sans-serif;
+}
+
+.userlist-search:focus {
+  border-color: #1976d2; /* MUI primary blue */
+  outline: none;
+}
+
+.userlist-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.1);
+  font-family: "Nunito", sans-serif;
+}
+
+.userlist-table th,
+.userlist-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.875rem;
+}
+
+.userlist-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  user-select: none;
+}
+
+.userlist-table th.sortable {
+  cursor: pointer;
+  color: #1976d2;
+}
+
+.userlist-table tr:hover {
+  background-color: #e3f2fd;
+}
+
+.no-results {
+  text-align: center;
+  font-style: italic;
+  padding: 20px;
+  color: #999;
+}
+
+.userlist-pagination {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  color: #1976d2;
+  background: none;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-btn:disabled {
+  color: #aaa;
+  border-color: #aaa;
+  cursor: not-allowed;
+}
+
+.pagination-btn:not(:disabled):hover {
+  background-color: #1976d2;
+  color: white;
+}
+
+.pagination-info {
+  font-size: 0.875rem;
+  color: #555;
+  margin-left: auto;
+}
+
+.pagination-select {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.action-icons {
+  display: flex;
+  gap: 15px; /* modern way to add space between flex items */
+  align-items: center;
+}
+
+.action-icon {
+  cursor: pointer;
+  color: #1976d2; /* optional: icon color */
+  transition: color 0.3s;
+}
+
+.action-icon:hover {
+  color: #115293;
+}
+
+.delete-icon {
+  color: red;
+}
+
+.delete-icon:hover {
+  color: darkred;
+}
+
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #1976d2; /* primary blue */
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-export:hover {
+  background-color: #115293; /* darker blue on hover */
+}
+
+/* Specific colors for each button */
+.btn-export.excel {
+  background-color: #2e7d32; /* green */
+}
+
+.btn-export.excel:hover {
+  background-color: #1b4d21;
+}
+
+.btn-export.pdf {
+  background-color: #d32f2f; /* red */
+}
+
+.btn-export.pdf:hover {
+  background-color: #9a1c1c;
+}
+
+.btn-export.print {
+  background-color: #f9a825; /* amber/yellow */
+  color: #212121;
+}
+
+.btn-export.print:hover {
+  background-color: #c17900;
+}
+
+.export-buttons {
+  margin: 10px 0;
+  display: flex;
+  
+  justify-content: flex-end; /* right align */
+  gap: 10px;
+}
+
+.btn-export .export-icon {
+  margin-right: 6px;
+  font-size: 20px;
+  vertical-align: middle;
+  color: white;
+}
+
+.btn-export.print .export-icon {
+  color: #212121; /* dark color for print icon */
+}
+
+.userlist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap; /* allows wrapping on small screens */
+  gap: 10px; /* spacing between elements */
+}
+
+.userlist-search {
+  flex-grow: 1;
+  max-width: 300px;
+  padding: 6px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.export-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-export {
+    height: 38px; /* match .userlist-search height */
+    min-width: 100px; /* optional: ensure button is not too small */
+    box-sizing: border-box;
+}
+
+.btn-export {
+  display: flex;
+  align-items: center;
+  background-color: #1976d2;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-export:hover {
+  background-color: #115293;
+}
+
+.btn-export .export-icon {
+  margin-right: 6px;
+  font-size: 20px;
+  vertical-align: middle;
+  color: white;
+}
+
+.btn-export.print {
+  background-color: #f9a825;
+  color: #212121;
+}
+
+.btn-export.print:hover {
+  background-color: #c17900;
+}
+
+.btn-export.print .export-icon {
+  color: #212121;
+}
+
+.userlist-table-total-row {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 700;
+  font-size: 1rem;
+  border-top: 2px solid #1976d2;
+}
+
+/* Responsive layout for profile page and tables */
+@media (max-width: 900px) {
+  .profile-page {
+    flex-direction: column;
+    padding: 0 0.5rem;
+  }
+  .profile-left, .profile-right {
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .profile-card, .info-card {
+    width: 100% !important;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0 0 1rem 0;
+    padding: 1rem 0.5rem;
+    box-sizing: border-box;
+  }
+  .userlist-table, .userlist-table th, .userlist-table td {
+    font-size: 0.95rem;
+    padding: 8px 4px;
+    word-break: break-word;
+  }
+  .userlist-table {
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+  .userlist-pagination, .export-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .userlist-search, .pagination-select, .btn-export, .btn-add-user {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+/* Responsive styles for MilkCollectionTable */
+@media (max-width: 900px) {
+  .userlist-table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .userlist-table th, .userlist-table td {
+    font-size: 0.95rem;
+    padding: 8px 4px;
+    min-width: 100px;
+    word-break: break-word;
+  }
+  .userlist-table-total-row {
+    font-size: 0.95rem;
+  }
+  .export-buttons, .userlist-pagination {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .userlist-search, .pagination-select, .btn-export {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 600px) {
+  .profile-page {
+    padding: 0;
+  }
+  .profile-card, .info-card {
+    padding: 0.5rem 0.2rem;
+  }
+  .userlist-table th, .userlist-table td {
+    font-size: 0.85rem;
+    padding: 6px 2px;
+    min-width: 80px;
+  }
+  .userlist-table-total-row {
+    font-size: 0.9rem;
+  }
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* Make milk collection card full width of the profile page */
+.milk-collection-fullwidth {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(-50vw + 50%);
+  margin-right: 0;
+  left: 0;
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 0;
+  padding-left: 2vw;
+  padding-right: 2vw;
+}
+
+@media (max-width: 900px) {
+  .milk-collection-fullwidth {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: calc(-50vw + 50%);
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+  }
+}
+
+.milk-collection-bottom-section {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: 0;
+  left: 0;
+  position: relative;
+  box-sizing: border-box;
+  background: #fff;
+  padding: 1vw 0 1vw 0; /* Reduced vertical padding */
+  z-index: 2;
+}
+
+.milk-collection-bottom-section .milk-collection-fullwidth {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  background: #fff;
+  padding: 1rem 1rem; /* Reduced top/bottom padding */
+}
+
+@media (max-width: 900px) {
+  .milk-collection-bottom-section {
+    padding: 0.2vw 0;
+  }
+  .milk-collection-bottom-section .milk-collection-fullwidth {
+    max-width: 100vw;
+    padding: 0.5rem 0.2rem;
+    border-radius: 0;
+  }
+}
+

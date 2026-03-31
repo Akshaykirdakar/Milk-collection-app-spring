@@ -1,0 +1,164 @@
+MILK APPLICATION SETUP GUIDE (FRONTEND + BACKEND)
+
+==================================================
+STEP 1: INSTALL REQUIRED SOFTWARE
+=================================
+
+1. Install Node.js (Recommended: v18 or above)
+2. Install Java (JDK 17 required)
+3. Install Maven
+4. Install MySQL Server
+
+Verify installations:
+node -v
+npm -v
+java -version
+mvn -v
+
+==================================================
+STEP 2: GET PROJECT CODE
+========================
+
+Clone your repository:
+
+git clone https://github.com/Akshaykirdakar/Milk-collection-app-spring
+
+Project contains:
+
+* Backend (Spring Boot)
+* Frontend (React Vite)
+
+==================================================
+BACKEND SETUP (SPRING BOOT)
+===========================
+
+---
+
+## STEP 3: SETUP DATABASE
+
+1. Open MySQL
+2. Create database:
+
+   CREATE DATABASE milkapplication;
+
+---
+
+## STEP 4: CONFIGURE DATABASE
+
+Go to:
+src/main/resources/application.properties
+
+Update:
+
+spring.datasource.url=jdbc:mysql://localhost:3306/milkapplication?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=YOUR_PASSWORD
+
+---
+
+## STEP 5: RUN BACKEND
+
+Navigate to backend folder and run:
+
+mvn clean install
+mvn spring-boot:run
+
+Backend will start at:
+http://localhost:8081
+
+==================================================
+FRONTEND SETUP (VITE + REACT)
+=============================
+
+---
+
+## STEP 6: GO TO FRONTEND FOLDER
+
+Example:
+
+cd FrontEnd/Milk_FrontEnd/milk
+
+---
+
+## STEP 7: INSTALL DEPENDENCIES
+
+Run:
+
+npm install
+
+---
+
+## STEP 8: CREATE ENV FILE
+
+Create file in frontend root:
+
+.env
+
+Add:
+
+VITE_API_URL=http://localhost:8081
+
+---
+
+## STEP 9: RUN FRONTEND
+
+Run:
+
+npm run dev
+
+Open browser:
+
+http://localhost:5173
+
+==================================================
+IMPORTANT NOTES
+===============
+
+✔ Backend must be running before frontend
+✔ MySQL must be running
+✔ Correct DB username/password required
+✔ .env file is mandatory for API connection
+
+==================================================
+COMMON ISSUES & FIXES
+=====================
+
+1. Backend not starting:
+
+   * Check MySQL is running
+   * Check database exists
+   * Check MySQL dependency in pom.xml
+
+2. CORS error:
+
+   * Ensure backend CORS config is correct
+   * Restart backend
+
+3. Frontend module error:
+   Run:
+   npm install
+
+4. API not working:
+
+   * Check backend URL
+   * Check .env file
+
+5. Port already in use:
+   Frontend:
+   npm run dev -- --port 5174
+
+==================================================
+FINAL FLOW
+==========
+
+1. Install all software
+2. Clone project
+3. Setup database
+4. Run backend
+5. Setup frontend
+6. Run frontend
+7. Open browser
+
+==================================================
+END
+===

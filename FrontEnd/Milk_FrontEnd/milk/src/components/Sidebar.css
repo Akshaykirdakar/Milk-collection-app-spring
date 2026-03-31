@@ -1,0 +1,39 @@
+/* Sidebar.css */
+
+.sidebar {
+  position: fixed;
+  top: 60px; /* height of topbar */
+  left: 0;
+  width: 235px;
+  height: calc(100vh - 60px);
+  background-color: #1976d2; /* MUI primary blue */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+  transition: transform 0.3s ease-in-out;
+  z-index: 1200;
+  text-transform: uppercase;
+font-weight: bold;
+letter-spacing: 1.5px;
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar a {
+  color: white;
+  padding: 0.75rem 1rem;
+  font-family: "Nunito", sans-serif;
+  text-decoration: none;
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  transition: background-color 0.2s, border-left-color 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background-color: #1565c0; /* darker blue */
+  border-left-color: #ffc107; /* amber accent */
+}

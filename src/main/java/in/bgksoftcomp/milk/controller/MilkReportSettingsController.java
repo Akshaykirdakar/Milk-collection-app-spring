@@ -13,7 +13,6 @@ import in.bgksoftcomp.milk.services.MilkReportSettingsService;
 
 @RestController
 @RequestMapping("/api/reports/settings")
-@CrossOrigin("http://localhost:3000/")
 public class MilkReportSettingsController {
 
     private final MilkReportSettingsService settingsService;

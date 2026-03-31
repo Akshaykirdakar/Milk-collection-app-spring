@@ -1,0 +1,662 @@
+/* Reset and base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Document level adjustments */
+html {
+  font-size: 100%; /* Default 16px */
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  min-width: 320px; /* Minimum supported width */
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print styles */
+@media print {
+  .no-print,
+  .MuiDrawer-root,
+  .MuiAppBar-root {
+    display: none;
+  }
+
+  /* Reset body for printing */
+  html, body {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+  }
+
+  body {
+    position: static !important;
+    display: block !important;
+  }
+
+  /* Reset main layout for printing */
+  .MuiBox-root[component="main"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    position: static !important;
+    overflow: visible !important;
+  }
+
+  /* Print content styles */
+  .print-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    position: static !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  
+  /* Ensure full width for all containers */
+  .MuiContainer-root,
+  .MuiBox-root,
+  .milk-report-wrapper,
+  .report-container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    overflow: visible !important;
+  }
+
+  /* Table styles for print */
+  table {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border-collapse: collapse !important;
+  }
+
+  /* Keep header row on each printed page */
+  thead {
+    display: table-header-group !important;
+  }
+
+  /* Allow rows to break across pages */
+  tr {
+    page-break-inside: auto !important;
+    page-break-after: auto !important;
+  }
+
+  /* Prevent header and first row from separating */
+  thead tr {
+    break-after: avoid !important;
+  }
+
+  /* Prevent single rows from breaking across pages */
+  tbody tr {
+    break-inside: avoid !important;
+  }
+
+  /* Keep last row with its data */
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  /* Fix for right-side printing */
+  #root {
+    width: 100% !important;
+    position: static !important;
+    display: block !important;
+  }
+
+  /* Remove any fixed positioning */
+  * {
+    position: relative !important;
+    float: none !important;
+    transform: none !important;
+  }
+}
+
+  /* Table print styles */
+  table {
+    break-inside: avoid;
+    width: 100% !important;
+  }
+
+  /* Paper elements in print */
+  .MuiPaper-root {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Remove background colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+
+/* Responsive container */
+.container {
+  width: 100%;
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Responsive images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive tables */
+table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+/* Text scaling */
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media screen and (min-width: 1201px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Proper zoom handling */
+@viewport {
+  width: device-width;
+  zoom: 1;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
+
+/* Improved focus outline for better accessibility */
+:focus-visible {
+  outline: 2px solid #1976d2;
+  outline-offset: 2px;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode scrollbar */
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+  
+  img {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+  
+  table, figure {
+    page-break-inside: avoid;
+  }
+  
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* === Additional Print-specific styles === */
+@media print {
+  .pagebreak {
+    page-break-before: always;
+  }
+  
+  .no-break {
+    page-break-inside: avoid;
+  }
+  
+  @page {
+    margin: 2cm;
+  }
+}
+
+.profile-right {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.profile-card, .social-links, .info-card {
+  width: 100%; /* Make cards take full width of their container */
+}
+
+/* Optional: limit max-width of left cards so they don't get too wide */
+.profile-left > div {
+  max-width: 320px;
+}
+
+.profile-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.job-title {
+  color: gray;
+  margin-bottom: 0.5rem;
+}
+
+.profile-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.btn-outline-primary {
+  background: transparent;
+  border: 1px solid #007bff;
+  color: #007bff;
+}
+
+.social-links {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  text-align: left; /* Align text left for clarity */
+}
+
+.info-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.info-card h4 {
+  margin-bottom: 1rem;
+}
+
+.project-status {
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+.progress {
+  height: 8px;
+  background-color: #007bff;
+  border-radius: 4px;
+}
+
+/* === FORM ACTION ROW === */
+
+.form-action-row {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  padding-right: 0.5rem;
+}
+
+.submit-button {
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  min-width: 120px;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.submit-button:hover {
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
+}
+
+.reset-button {
+  background: #fff;
+  color: #1976d2;
+  border: 1.5px solid #1976d2;
+  font-weight: 500;
+  border-radius: 8px;
+  min-width: 100px;
+  transition: background 0.3s, color 0.3s;
+}
+.reset-button:hover {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.cancel-button {
+  background: #fff;
+  color: #d32f2f;
+  border: 1.5px solid #d32f2f;
+  font-weight: 500;
+  border-radius: 8px;
+  min-width: 100px;
+  transition: background 0.3s, color 0.3s;
+}
+.cancel-button:hover {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+.add-user-form .form-row > div:nth-child(1) > div > div[class*="MuiSelect-select"] { /* Targeting the Select input */
+  z-index: 10; /* Or a higher value */
+}
+
+/* === YEAR DROPDOWN === */
+
+.year-dropdown {
+  background: #f5faff;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  transition: box-shadow 0.3s;
+}
+.year-dropdown .MuiInputLabel-root {
+  color: #1976d2;
+  font-weight: 600;
+}
+.year-dropdown .MuiOutlinedInput-root {
+  border-radius: 8px;
+  background: #f5faff;
+}
+.year-dropdown .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2;
+}
+.year-dropdown:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #42a5f5;
+}
+.year-dropdown .MuiSelect-select {
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.year-dropdown .MuiMenu-paper {
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.10);
+}
+
+
+.milk-rate-container {
+  padding: 24px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+
+.milk-chart-card {
+  padding: 20px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 10, 1, 1);
+  background-color: #1976d2;
+  transition: all 0.3s ease;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  
+}
+
+.chart-header:hover {
+  background-color: #f9f9f9;
+}
+
+.action-buttons {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.sidebar-section {
+  margin-top: 24px;
+}
+
+.sidebar-section-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-nested-list {
+  list-style: none;
+  padding-left: 24px;
+  margin-bottom: 0;
+}
+
+.sidebar-nested-list li {
+  margin-bottom: 14px;
+}
+
+.sidebar > a,
+.sidebar .sidebar-section {
+  margin-bottom: 18px;
+  display: block;
+}
+
+.sidebar > a:last-child,
+.sidebar .sidebar-section:last-child {
+  margin-bottom: 0;
+}
+
+/* Wrapper around the whole report */
+.milk-report-wrapper {
+  width: 100%;
+  max-width: 1000px;  /* Max width for readability */
+  margin: 20px auto;  /* Center horizontally */
+  padding: 10px 20px;
+  background-color: white;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+  color: #000;
+}
+
+/* Report header styles */
+.report-header {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Subheading */
+.report-subheader {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Supplier info box */
+.supplier-info {
+  border: 1px solid black;
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Table container */
+.report-table-container {
+  overflow-x: auto;  /* Responsive scroll if table is wide */
+}
+
+/* Table styles */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+/* Table header */
+.report-table th {
+  border: 1px solid black;
+  padding: 8px 5px;
+  font-weight: bold;
+  text-align: center;
+  background-color: #f2f2f2;
+  word-wrap: break-word;
+}
+
+/* Table data cells */
+.report-table td {
+  border: 1px solid black;
+  padding: 6px 5px;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* Total row styling */
+.report-table tfoot td {
+  font-weight: bold;
+  background-color: #ddd;
+}
+
+/* Print styles */
+@media print {
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: white;
+  }
+
+  .milk-report-wrapper {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    font-size: 12pt;
+  }
+
+  .report-table {
+    page-break-inside: avoid;
+  }
+
+  .report-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  /* Avoid page breaks inside table rows */
+  .report-table tr, .report-table td, .report-table th {
+    page-break-inside: avoid;
+  }
+}

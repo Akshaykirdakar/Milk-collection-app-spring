@@ -16,7 +16,6 @@
 	
 	@RestController
 	@RequestMapping("/api/reports/milk-collections")
-	@CrossOrigin("http://localhost:3000/")
 	public class MilkReportController {
 	
 	    private final MilkReportService milkReportService;
