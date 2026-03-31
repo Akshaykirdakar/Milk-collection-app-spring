@@ -5,6 +5,7 @@ import {
   Typography,
   TextField,
   Button,
+  useTheme,
 } from '@mui/material';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PrintIcon from '@mui/icons-material/Print';
@@ -13,6 +14,7 @@ import MilkReport from './MilkReport';
 
 const MilkReportPage = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [fromDate, setFromDate] = useState('2025-01-01');
   const [toDate, setToDate] = useState('2025-10-15');
   const [submitted, setSubmitted] = useState(false);
@@ -28,7 +30,7 @@ const MilkReportPage = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ p: 3, backgroundColor: theme.palette.background.default, minHeight: '100vh' }}>
       <Box className="no-print">
         <Paper
           elevation={0}
@@ -39,6 +41,9 @@ const MilkReportPage = () => {
             maxWidth: 1200,
             mx: 'auto',
             mb: 3,
+            backgroundColor: theme.palette.background.paper,
+            borderColor: theme.palette.divider,
+            border: `1px solid ${theme.palette.divider}`,
           }}
         >
           <Typography
@@ -47,7 +52,7 @@ const MilkReportPage = () => {
               textAlign: 'center',
               mb: 4,
               fontWeight: 600,
-              color: 'text.primary',
+              color: theme.palette.text.primary,
             }}
           >
             {t('milkCollectionReport', 'Milk Collection Report')}
@@ -68,7 +73,18 @@ const MilkReportPage = () => {
               value={fromDate}
               onChange={(e) => setFromDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
-              sx={{ minWidth: 200 }}
+              sx={{ 
+                minWidth: 200,
+                '& .MuiOutlinedInput-root': {
+                  color: theme.palette.text.primary,
+                  '& fieldset': {
+                    borderColor: theme.palette.divider,
+                  },
+                  '&:hover fieldset': {
+                    borderColor: theme.palette.primary.main,
+                  },
+                },
+              }}
             />
 
             <TextField
@@ -77,14 +93,31 @@ const MilkReportPage = () => {
               value={toDate}
               onChange={(e) => setToDate(e.target.value)}
               InputLabelProps={{ shrink: true }}
-              sx={{ minWidth: 200 }}
+              sx={{ 
+                minWidth: 200,
+                '& .MuiOutlinedInput-root': {
+                  color: theme.palette.text.primary,
+                  '& fieldset': {
+                    borderColor: theme.palette.divider,
+                  },
+                  '&:hover fieldset': {
+                    borderColor: theme.palette.primary.main,
+                  },
+                },
+              }}
             />
 
             <Button
               variant="contained"
               onClick={handleGenerateReport}
               startIcon={<AssessmentIcon />}
-              sx={{ px: 3 }}
+              sx={{ 
+                px: 3,
+                backgroundColor: theme.palette.mode === 'dark' ? '#2563eb' : '#1d9bf0',
+                '&:hover': {
+                  backgroundColor: theme.palette.mode === 'dark' ? '#1d4ed8' : '#1b87cc',
+                }
+              }}
             >
               {t('generateReport', 'Generate Report')}
             </Button>
@@ -102,6 +135,14 @@ const MilkReportPage = () => {
                 variant="outlined"
                 onClick={handlePrint}
                 startIcon={<PrintIcon />}
+                sx={{
+                  borderColor: theme.palette.mode === 'dark' ? '#60a5fa' : '#1d9bf0',
+                  color: theme.palette.mode === 'dark' ? '#60a5fa' : '#1d9bf0',
+                  '&:hover': {
+                    borderColor: theme.palette.mode === 'dark' ? '#93c5fd' : '#0ea5e9',
+                    backgroundColor: theme.palette.mode === 'dark' ? 'rgba(96, 165, 250, 0.1)' : 'rgba(29, 155, 240, 0.1)',
+                  }
+                }}
               >
                 {t('printReport', 'Print Report')}
               </Button>
@@ -115,7 +156,7 @@ const MilkReportPage = () => {
           ref={reportRef}
           className="print-content"
           sx={{
-            bgcolor: 'background.paper',
+            bgcolor: theme.palette.background.paper,
             p: 3,
             position: 'relative',
             '@media print': {

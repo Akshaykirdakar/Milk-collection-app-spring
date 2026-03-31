@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Paper, Typography, Container, Grid } from '@mui/material';
+import { Box, Paper, Typography, Container, Grid, useTheme } from '@mui/material';
 
 export const PageContainer = ({ children, maxWidth = 'lg', sx = {} }) => (
   <Box
@@ -25,27 +25,29 @@ export const PageContainer = ({ children, maxWidth = 'lg', sx = {} }) => (
   </Box>
 );
 
-export const PageHeader = ({ title, subtitle, action, sx = {} }) => (
-  <Box sx={{ mb: 4, ...sx }}>
-    <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: { xs: 'flex-start', md: 'center' },
-        gap: 2,
-        flexWrap: 'wrap',
-      }}
-    >
-      <Box>
-        <Typography
-          variant="h4"
-          sx={{
-            fontWeight: 700,
-            color: '#0f172a',
-            mb: 0.75,
-            letterSpacing: '-0.03em',
-          }}
-        >
+export const PageHeader = ({ title, subtitle, action, sx = {} }) => {
+  const theme = useTheme();
+  return (
+    <Box sx={{ mb: 4, ...sx }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: { xs: 'flex-start', md: 'center' },
+          gap: 2,
+          flexWrap: 'wrap',
+        }}
+      >
+        <Box>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 700,
+              color: theme.palette.text.primary,
+              mb: 0.75,
+              letterSpacing: '-0.03em',
+            }}
+          >
           {title}
         </Typography>
         {subtitle && (
@@ -63,7 +65,8 @@ export const PageHeader = ({ title, subtitle, action, sx = {} }) => (
       {action && <Box className="no-print">{action}</Box>}
     </Box>
   </Box>
-);
+  );
+};
 
 export const SectionCard = ({
   children,
@@ -72,45 +75,49 @@ export const SectionCard = ({
   noPadding = false,
   sx = {},
   contentSx = {},
-}) => (
-  <Paper
-    elevation={0}
-    className="app-fade-in"
-    sx={{
-      backgroundColor: '#ffffff',
-      border: '1px solid #e6e6e6',
-      borderRadius: '12px',
-      boxShadow: '0 8px 20px rgba(15, 23, 42, 0.05)',
-      p: noPadding ? 0 : { xs: 2.5, sm: 3 },
-      overflow: 'hidden',
-      ...sx,
-    }}
-  >
-    {(title || subtitle) && (
-      <Box
-        sx={{
-          mb: 2.75,
-          pb: 2,
-          borderBottom: '1px solid rgba(226, 232, 240, 0.9)',
-        }}
-      >
-        {title && (
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 700,
-              color: '#0f172a',
-            }}
-          >
-            {title}
-          </Typography>
-        )}
-        {subtitle && (
-          <Typography
-            variant="body2"
-            sx={{
-              color: '#6b7280',
-              mt: 0.75,
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Paper
+      elevation={0}
+      className="app-fade-in"
+      sx={{
+        backgroundColor: theme.palette.mode === 'dark' ? '#111827' : '#ffffff',
+        border: `1px solid ${theme.palette.mode === 'dark' ? '#334155' : '#e6e6e6'}`,
+        borderRadius: '12px',
+        boxShadow: theme.palette.mode === 'dark' ? '0 8px 20px rgba(0, 0, 0, 0.25)' : '0 8px 20px rgba(15, 23, 42, 0.05)',
+        color: theme.palette.text.primary,
+        p: noPadding ? 0 : { xs: 2.5, sm: 3 },
+        overflow: 'hidden',
+        ...sx,
+      }}
+    >
+      {(title || subtitle) && (
+        <Box
+          sx={{
+            mb: 2.75,
+            pb: 2,
+            borderBottom: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          {title && (
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 700,
+                color: theme.palette.text.primary,
+              }}
+            >
+              {title}
+            </Typography>
+          )}
+          {subtitle && (
+            <Typography
+              variant="body2"
+              sx={{
+                color: theme.palette.text.secondary,
+                mt: 0.75,
             }}
           >
             {subtitle}
@@ -121,6 +128,7 @@ export const SectionCard = ({
     <Box sx={contentSx}>{children}</Box>
   </Paper>
 );
+};
 
 export const FormSection = ({ children, title }) => (
   <Box sx={{ mb: 3.5 }}>
@@ -157,18 +165,22 @@ export const StatCard = ({
   icon: Icon,
   tint = 'rgba(37,99,235,0.12)',
   sx = {},
-}) => (
-  <Paper
-    elevation={0}
-    className="app-fade-in"
-    sx={{
-      backgroundColor: '#ffffff',
-      border: '1px solid #e6e6e6',
-      borderRadius: '12px',
-      boxShadow: '0 8px 20px rgba(15, 23, 42, 0.05)',
-      p: { xs: 2.2, sm: 2.5 },
-      position: 'relative',
-      overflow: 'hidden',
+}) => {
+  const theme = useTheme();
+
+  return (
+    <Paper
+      elevation={0}
+      className="app-fade-in"
+      sx={{
+        backgroundColor: theme.palette.mode === 'dark' ? '#1f2937' : '#ffffff',
+        border: `1px solid ${theme.palette.mode === 'dark' ? '#334155' : '#e6e6e6'}`,
+        color: theme.palette.text.primary,
+        borderRadius: '12px',
+        boxShadow: theme.palette.mode === 'dark' ? '0 8px 20px rgba(0, 0, 0, 0.22)' : '0 8px 20px rgba(15, 23, 42, 0.05)',
+        p: { xs: 2.2, sm: 2.5 },
+        position: 'relative',
+        overflow: 'hidden',
       '&::before': {
         content: '""',
         position: 'absolute',
@@ -227,47 +239,56 @@ export const StatCard = ({
     </Box>
   </Paper>
 );
+};
 
-export const TableHeaderCell = ({ children, ...props }) => (
-  <Typography
-    variant="body2"
-    sx={{
-      fontWeight: 700,
-      color: '#334155',
-      backgroundColor: 'rgba(248,250,252,0.72)',
-      padding: '12px 16px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.08em',
-      ...props.sx,
-    }}
-    {...props}
-  >
-    {children}
-  </Typography>
-);
+export const TableHeaderCell = ({ children, ...props }) => {
+  const theme = useTheme();
 
-export const StyledTableRow = ({ children, hoverable = true, ...props }) => (
-  <Box
-    sx={{
-      display: 'flex',
-      alignItems: 'center',
-      padding: '16px',
-      borderBottom: '1px solid rgba(226,232,240,0.8)',
-      backgroundColor: 'rgba(255,255,255,0.52)',
-      transition: hoverable ? 'transform 0.2s ease, background-color 0.2s ease' : 'none',
-      '&:hover': hoverable
-        ? {
-            backgroundColor: 'rgba(255,255,255,0.82)',
-            transform: 'translateY(-1px)',
-          }
-        : {},
-      ...props.sx,
-    }}
-    {...props}
-  >
-    {children}
-  </Box>
-);
+  return (
+    <Typography
+      variant="body2"
+      sx={{
+        fontWeight: 700,
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.mode === 'dark' ? '#0f172a' : 'rgba(248,250,252,0.72)',
+        padding: '12px 16px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.08em',
+        ...props.sx,
+      }}
+      {...props}
+    >
+      {children}
+    </Typography>
+  );
+};
+
+export const StyledTableRow = ({ children, hoverable = true, ...props }) => {
+  const theme = useTheme();
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '16px',
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.mode === 'dark' ? '#111827' : 'rgba(255,255,255,0.52)',
+        transition: hoverable ? 'transform 0.2s ease, background-color 0.2s ease' : 'none',
+        '&:hover': hoverable
+          ? {
+              backgroundColor: theme.palette.mode === 'dark' ? '#1f2937' : 'rgba(255,255,255,0.82)',
+              transform: 'translateY(-1px)',
+            }
+          : {},
+        ...props.sx,
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  );
+};
 
 export const TableCell = ({ children, flex = 1, ...props }) => (
   <Box
@@ -370,4 +391,4 @@ export const SectionDivider = ({ label, sx = {} }) => (
       />
     )}
   </Box>
-);
+  );

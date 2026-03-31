@@ -17,10 +17,12 @@ import {
   Paper,
   Box,
   Grid,
+  useTheme,
 } from '@mui/material';
 
 export default function AddMilkEntry({ refreshData, onClose }) {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   const today = new Date().toISOString().split('T')[0];
   const currentYear = new Date().getFullYear();
@@ -71,6 +73,7 @@ export default function AddMilkEntry({ refreshData, onClose }) {
     snf: ''
   });
 
+  const [touched, setTouched] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -127,6 +130,30 @@ export default function AddMilkEntry({ refreshData, onClose }) {
     });
   };
 
+  const handleFieldBlur = (event) => {
+    const { name } = event.target;
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  };
+
+  const getFieldError = (fieldName) => {
+    if (!touched[fieldName]) return false;
+    
+    const value = formData[fieldName];
+    const isEmpty = !String(value ?? '').trim();
+    
+    // Numeric validation for liters, fat, clr, snf
+    if (['liters', 'fat', 'clr', 'snf'].includes(fieldName)) {
+      if (isEmpty) return true;
+      const numValue = parseFloat(value);
+      return isNaN(numValue) || numValue < 0;
+    }
+    
+    return isEmpty;
+  };
+
   const computeDateLimits = () => {
     return getFYStartEnd(formData.year);
   };
@@ -134,6 +161,13 @@ export default function AddMilkEntry({ refreshData, onClose }) {
   const { startDate: minDate, endDate: maxDate } = computeDateLimits();
 
   const validateForm = () => {
+    // Mark all fields as touched
+    const allFields = Object.keys(formData).reduce(
+      (acc, key) => ({ ...acc, [key]: true }),
+      {}
+    );
+    setTouched(allFields);
+
     if (!formData.supplierName || !formData.date || !formData.liters || !formData.fat || !formData.clr || !formData.snf) {
       setErrorMessage(t('error.allFieldsRequired') || 'Please fill in all required fields.');
       return false;
@@ -192,13 +226,14 @@ export default function AddMilkEntry({ refreshData, onClose }) {
       clr: '',
       snf: ''
     });
+    setTouched({});
     setSuccessMessage('');
     setErrorMessage('');
   };
 
   return (
     <Box sx={{ 
-      backgroundColor: '#f5f7fa',
+      backgroundColor: theme.palette.background.default,
       minHeight: '100vh',
       display: 'flex',
       justifyContent: 'center',
@@ -213,7 +248,7 @@ export default function AddMilkEntry({ refreshData, onClose }) {
             sx={{ 
               fontWeight: 500,
               fontSize: { xs: '1.2rem', sm: '1.5rem' },
-              color: '#1a1a1a',
+              color: theme.palette.text.primary,
               mb: 0.5,
             }}
           >
@@ -222,7 +257,7 @@ export default function AddMilkEntry({ refreshData, onClose }) {
           <Typography 
             variant="body2" 
             sx={{ 
-              color: '#666',
+              color: theme.palette.text.secondary,
               fontSize: '0.9rem',
             }}
           >
@@ -234,8 +269,8 @@ export default function AddMilkEntry({ refreshData, onClose }) {
         <Paper 
           elevation={0} 
           sx={{ 
-            backgroundColor: '#ffffff',
-            border: '1px solid #e0e0e0',
+            backgroundColor: theme.palette.background.paper,
+            border: `1px solid ${theme.palette.divider}`,
             borderRadius: '8px',
             p: { xs: 2.5, sm: 3.5 },
             transition: 'all 0.2s ease',
@@ -279,13 +314,15 @@ export default function AddMilkEntry({ refreshData, onClose }) {
               severity="error" 
               sx={{ 
                 mb: 2.5,
-                py: 1.25,
-                px: 1.75,
-                fontSize: '0.875rem',
-                border: '1px solid #ffcdd2',
-                backgroundColor: '#ffebee',
+                py: 2,
+                px: 2.5,
+                fontSize: '1rem',
+                fontWeight: 600,
+                border: '2px solid #d32f2f',
+                backgroundColor: '#ffcdd2',
                 borderRadius: '6px',
-                '& .MuiAlert-icon': { mr: 1.25, fontSize: '1.2rem' }
+                color: '#b71c1c',
+                '& .MuiAlert-icon': { mr: 1.5, fontSize: '1.5rem', color: '#d32f2f' }
               }}
             >
               {supplierError}
@@ -337,10 +374,13 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
+                  onBlur={handleFieldBlur}
                   InputLabelProps={{ shrink: true }}
                   required
                   size="small"
                   inputProps={{ min: minDate, max: maxDate }}
+                  error={getFieldError('date')}
+                  helperText={getFieldError('date') ? 'Date is required' : ' '}
                   sx={{
                     fontSize: '0.875rem',
                     '& .MuiOutlinedInput-notchedOutline': {
@@ -361,9 +401,12 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                   name="userID"
                   value={formData.userID}
                   onChange={handleChange}
+                  onBlur={handleFieldBlur}
                   type="number"
                   required
                   size="small"
+                  error={getFieldError('userID')}
+                  helperText={getFieldError('userID') ? 'User ID is required' : ' '}
                   inputProps={{ min: 0 }}
                   sx={{
                     fontSize: '0.875rem',
@@ -396,7 +439,9 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                       name="supplierName"
                       value={formData.supplierName}
                       onChange={handleChange}
+                      onBlur={handleFieldBlur}
                       label={t('supplierName') || 'Supplier Name'}
+                      error={getFieldError('supplierName')}
                       sx={{
                         fontSize: '0.875rem',
                         '& .MuiOutlinedInput-notchedOutline': {
@@ -490,9 +535,12 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                   name="liters" 
                   type="number" 
                   value={formData.liters} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  onBlur={handleFieldBlur}
                   required 
                   size="small"
+                  error={getFieldError('liters')}
+                  helperText={getFieldError('liters') ? 'Valid number required' : ' '}
                   inputProps={{ min: 0, step: 'any' }}
                   sx={{
                     fontSize: '0.875rem',
@@ -513,9 +561,12 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                   name="fat" 
                   type="number" 
                   value={formData.fat} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  onBlur={handleFieldBlur}
                   required 
                   size="small"
+                  error={getFieldError('fat')}
+                  helperText={getFieldError('fat') ? 'Valid number required' : ' '}
                   inputProps={{ min: 0, step: 'any' }}
                   sx={{
                     fontSize: '0.875rem',
@@ -536,9 +587,12 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                   name="clr" 
                   type="number" 
                   value={formData.clr} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  onBlur={handleFieldBlur}
                   required 
                   size="small"
+                  error={getFieldError('clr')}
+                  helperText={getFieldError('clr') ? 'Valid number required' : ' '}
                   inputProps={{ min: 0, step: 'any' }}
                   sx={{
                     fontSize: '0.875rem',
@@ -559,9 +613,12 @@ export default function AddMilkEntry({ refreshData, onClose }) {
                   name="snf" 
                   type="number" 
                   value={formData.snf} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  onBlur={handleFieldBlur}
                   required 
                   size="small"
+                  error={getFieldError('snf')}
+                  helperText={getFieldError('snf') ? 'Valid number required' : ' '}
                   inputProps={{ min: 0, step: 'any' }}
                   sx={{
                     fontSize: '0.875rem',

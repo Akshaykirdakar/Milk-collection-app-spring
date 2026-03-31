@@ -69,6 +69,7 @@ export default function AddUser({
 }) {
   const { t } = useTranslation();
   const [formData, setFormData] = useState(initialFormData);
+  const [touched, setTouched] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -106,12 +107,47 @@ export default function AddUser({
     }));
   };
 
-  const requiredError = (value) => !String(value ?? '').trim();
+  const handleFieldBlur = (event) => {
+    const { name } = event.target;
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+  };
+
+  const requiredError = (fieldName, value) => touched[fieldName] && !String(value ?? '').trim();
+
+  const hasValidationErrors = () => {
+    return (
+      !String(formData.role ?? '').trim() ||
+      !String(formData.firstName ?? '').trim() ||
+      !String(formData.lastName ?? '').trim() ||
+      !String(formData.dob ?? '').trim() ||
+      !String(formData.userGender ?? '').trim() ||
+      !String(formData.userActiveInactive ?? '').trim() ||
+      !String(formData.userMobile ?? '').trim() ||
+      (!userId && !String(formData.password ?? '').trim())
+    );
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
     setErrorMessage('');
+
+    // Mark all fields as touched to show validation errors
+    const allFields = Object.keys(formData).reduce(
+      (acc, key) => ({ ...acc, [key]: true }),
+      {}
+    );
+    setTouched(allFields);
+
+    // Check for validation errors
+    if (hasValidationErrors()) {
+      setSubmitting(false);
+      setErrorMessage(t('fillRequiredFields', 'Please fill in all required fields'));
+      return;
+    }
 
     const now = new Date().toISOString();
     const payload = {
@@ -204,8 +240,9 @@ export default function AddUser({
                     name="role"
                     value={formData.role}
                     onChange={handleChange}
-                    error={requiredError(formData.role)}
-                    helperText={requiredError(formData.role) ? t('required', 'Required') : ' '}
+                    onBlur={handleFieldBlur}
+                    error={requiredError('role', formData.role)}
+                    helperText={requiredError('role', formData.role) ? t('required', 'Required') : ' '}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -216,9 +253,10 @@ export default function AddUser({
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    error={requiredError(formData.firstName)}
+                    onBlur={handleFieldBlur}
+                    error={requiredError('firstName', formData.firstName)}
                     helperText={
-                      requiredError(formData.firstName) ? t('required', 'Required') : ' '
+                      requiredError('firstName', formData.firstName) ? t('required', 'Required') : ' '
                     }
                   />
                 </Grid>
@@ -229,6 +267,7 @@ export default function AddUser({
                     name="middleName"
                     value={formData.middleName}
                     onChange={handleChange}
+                    onBlur={handleFieldBlur}
                     helperText=" "
                   />
                 </Grid>
@@ -240,8 +279,9 @@ export default function AddUser({
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    error={requiredError(formData.lastName)}
-                    helperText={requiredError(formData.lastName) ? t('required', 'Required') : ' '}
+                    onBlur={handleFieldBlur}
+                    error={requiredError('lastName', formData.lastName)}
+                    helperText={requiredError('lastName', formData.lastName) ? t('required', 'Required') : ' '}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -253,9 +293,10 @@ export default function AddUser({
                     name="dob"
                     value={formData.dob}
                     onChange={handleChange}
+                    onBlur={handleFieldBlur}
                     InputLabelProps={{ shrink: true }}
-                    error={requiredError(formData.dob)}
-                    helperText={requiredError(formData.dob) ? t('required', 'Required') : ' '}
+                    error={requiredError('dob', formData.dob)}
+                    helperText={requiredError('dob', formData.dob) ? t('required', 'Required') : ' '}
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -269,13 +310,14 @@ export default function AddUser({
                   />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl fullWidth required error={requiredError(formData.userGender)}>
+                  <FormControl fullWidth required error={requiredError('userGender', formData.userGender)}>
                     <InputLabel>{t('userGender', 'Gender')}</InputLabel>
                     <Select
                       label={t('userGender', 'Gender')}
                       name="userGender"
                       value={formData.userGender}
                       onChange={handleChange}
+                      onBlur={handleFieldBlur}
                     >
                       <MenuItem value="">{t('select', 'Select')}</MenuItem>
                       <MenuItem value="Male">{t('male', 'Male')}</MenuItem>
@@ -283,7 +325,7 @@ export default function AddUser({
                       <MenuItem value="Other">{t('other', 'Other')}</MenuItem>
                     </Select>
                     <FormHelperText>
-                      {requiredError(formData.userGender) ? t('required', 'Required') : ' '}
+                      {requiredError('userGender', formData.userGender) ? t('required', 'Required') : ' '}
                     </FormHelperText>
                   </FormControl>
                 </Grid>
@@ -291,7 +333,7 @@ export default function AddUser({
                   <FormControl
                     fullWidth
                     required
-                    error={requiredError(formData.userActiveInactive)}
+                    error={requiredError('userActiveInactive', formData.userActiveInactive)}
                   >
                     <InputLabel>{t('userActiveInactive', 'Status')}</InputLabel>
                     <Select
@@ -299,13 +341,14 @@ export default function AddUser({
                       name="userActiveInactive"
                       value={formData.userActiveInactive}
                       onChange={handleChange}
+                      onBlur={handleFieldBlur}
                     >
                       <MenuItem value="">{t('select', 'Select')}</MenuItem>
                       <MenuItem value="Active">{t('active', 'Active')}</MenuItem>
                       <MenuItem value="Inactive">{t('inactive', 'Inactive')}</MenuItem>
                     </Select>
                     <FormHelperText>
-                      {requiredError(formData.userActiveInactive)
+                      {requiredError('userActiveInactive', formData.userActiveInactive)
                         ? t('required', 'Required')
                         : ' '}
                     </FormHelperText>
@@ -332,6 +375,7 @@ export default function AddUser({
                     type="email"
                     value={formData.userEmail}
                     onChange={handleChange}
+                    onBlur={handleFieldBlur}
                     helperText=" "
                   />
                 </Grid>
@@ -343,9 +387,10 @@ export default function AddUser({
                     name="userMobile"
                     value={formData.userMobile}
                     onChange={handleChange}
-                    error={requiredError(formData.userMobile)}
+                    onBlur={handleFieldBlur}
+                    error={requiredError('userMobile', formData.userMobile)}
                     helperText={
-                      requiredError(formData.userMobile) ? t('required', 'Required') : ' '
+                      requiredError('userMobile', formData.userMobile) ? t('required', 'Required') : ' '
                     }
                   />
                 </Grid>
@@ -357,11 +402,13 @@ export default function AddUser({
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    onBlur={handleFieldBlur}
                     required={!userId}
+                    error={!userId && requiredError('password', formData.password)}
                     helperText={
                       userId
                         ? t('leaveBlankPassword', 'Leave blank to keep current password')
-                        : t('required', 'Required')
+                        : requiredError('password', formData.password) ? t('required', 'Required') : ' '
                     }
                   />
                 </Grid>

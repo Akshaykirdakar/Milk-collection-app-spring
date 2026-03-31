@@ -74,6 +74,7 @@ const transformData = (rows) => {
 
 const MilkCollectionReport = ({ data }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [loading, setLoading] = useState(false);
 
   // Transform API/CSV data
@@ -117,39 +118,94 @@ const MilkCollectionReport = ({ data }) => {
     XLSX.writeFile(wb, "MilkCollectionReport.xlsx");
   };
 
-  if(loading) return <div>Loading...</div>;
+
+  if(loading) return <CircularProgress />;
 
   return (
-    <div>
-      <button onClick={exportExcel}>Export Excel</button>
+    <Box sx={{ backgroundColor: theme.palette.background.default, minHeight: '100vh', p: 3 }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+        <Button 
+          variant="contained" 
+          startIcon={<GetApp />} 
+          onClick={exportExcel}
+          sx={{ backgroundColor: theme.palette.mode === 'dark' ? '#2563eb' : '#1d9bf0' }}
+        >
+          Export Excel
+        </Button>
+      </Stack>
+      
       {members.map((m, idx) => (
-        <div key={idx} style={{ border:'1px solid #ccc', margin:'20px 0', padding:10, pageBreakAfter:'always' }}>
-          <h2>{m.name} (Code: {m.code})</h2>
-          <table style={{ width:'100%', borderCollapse:'collapse' }}>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Morning Litre</th><th>Morning Fat</th><th>Morning CLR</th><th>Morning SNF</th><th>Morning Rate</th><th>Morning Amount</th>
-                <th>Evening Litre</th><th>Evening Fat</th><th>Evening CLR</th><th>Evening SNF</th><th>Evening Rate</th><th>Evening Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {m.collections.map((c,i) => (
-                <tr key={i}>
-                  <td>{c.date}</td>
-                  <td>{c.morning.litre||0}</td><td>{c.morning.fat||0}</td><td>{c.morning.clr||0}</td><td>{c.morning.snf||0}</td><td>{c.morning.rate||0}</td><td>{c.morning.amount||0}</td>
-                  <td>{c.evening.litre||0}</td><td>{c.evening.fat||0}</td><td>{c.evening.clr||0}</td><td>{c.evening.snf||0}</td><td>{c.evening.rate||0}</td><td>{c.evening.amount||0}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div style={{ marginTop:10 }}>
-            <b>Totals: </b> Morning: {m.totals.morning.amount}, Evening: {m.totals.evening.amount}, Grand: {m.totals.grand.amount}, Average Rate: {m.totals.averageRate}
-          </div>
-        </div>
+        <Paper 
+          key={idx} 
+          sx={{ 
+            border: `1px solid ${theme.palette.divider}`, 
+            margin: '20px 0', 
+            padding: 2, 
+            pageBreakAfter: 'always',
+            backgroundColor: theme.palette.background.paper
+          }}
+        >
+          <Typography variant="h5" sx={{ mb: 2, color: theme.palette.text.primary, fontWeight: 'bold' }}>
+            {m.name} (Code: {m.code})
+          </Typography>
+          
+          <TableContainer>
+            <Table sx={{ width: '100%', borderCollapse: 'collapse' }} size="small">
+              <TableHead>
+                <TableRow sx={{ backgroundColor: theme.palette.mode === 'dark' ? '#1e293b' : '#f0f9ff' }}>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Date</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Morning Litre</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Morning Fat</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Morning CLR</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Morning SNF</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Morning Rate</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Morning Amount</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Evening Litre</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Evening Fat</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Evening CLR</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Evening SNF</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Evening Rate</TableCell>
+                  <TableCell sx={{ color: theme.palette.text.primary, fontWeight: 'bold' }}>Evening Amount</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {m.collections.map((c, i) => (
+                  <TableRow 
+                    key={i}
+                    sx={{ 
+                      borderBottom: `1px solid ${theme.palette.divider}`,
+                      '&:hover': { backgroundColor: theme.palette.mode === 'dark' ? '#1f2937' : '#f8fafc' }
+                    }}
+                  >
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.date}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.morning.litre||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.morning.fat||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.morning.clr||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.morning.snf||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.morning.rate||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.morning.amount||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.evening.litre||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.evening.fat||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.evening.clr||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.evening.snf||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.evening.rate||0}</TableCell>
+                    <TableCell sx={{ color: theme.palette.text.primary }}>{c.evening.amount||0}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          
+          <Box sx={{ marginTop: 2, color: theme.palette.text.primary }}>
+            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+              Totals: Morning: {m.totals.morning.amount}, Evening: {m.totals.evening.amount}, Grand: {m.totals.grand.amount}, Average Rate: {m.totals.averageRate}
+            </Typography>
+          </Box>
+        </Paper>
       ))}
+      
       <style>{`@media print { div { page-break-after: always; } }`}</style>
-    </div>
+    </Box>
   );
 };
 

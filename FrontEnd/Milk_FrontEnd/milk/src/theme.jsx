@@ -6,8 +6,11 @@ const primaryDark = '#1d4ed8';
 const secondaryMain = '#10b981';
 const accentMain = '#f59e0b';
 
-export const theme = createTheme({
-  breakpoints: {
+export function getTheme(mode = 'light') {
+  const isDark = mode === 'dark';
+
+  return createTheme({
+    breakpoints: {
     values: {
       xs: 0,
       sm: 600,
@@ -18,6 +21,7 @@ export const theme = createTheme({
   },
   spacing: 8,
   palette: {
+    mode,
     primary: {
       main: primaryMain,
       light: primaryLight,
@@ -50,15 +54,15 @@ export const theme = createTheme({
       dark: '#0891b2',
     },
     background: {
-      default: '#eef4fb',
-      paper: '#ffffff',
+      default: isDark ? '#0b1220' : '#eef4fb',
+      paper: isDark ? '#111827' : '#ffffff',
     },
     text: {
-      primary: '#0f172a',
-      secondary: '#6b7280',
-      disabled: '#94a3b8',
+      primary: isDark ? '#f8fafc' : '#0f172a',
+      secondary: isDark ? '#cbd5e1' : '#6b7280',
+      disabled: isDark ? '#94a3b8' : '#94a3b8',
     },
-    divider: 'rgba(148, 163, 184, 0.18)',
+    divider: isDark ? 'rgba(148, 163, 184, 0.28)' : 'rgba(148, 163, 184, 0.18)',
   },
   shape: {
     borderRadius: 14,
@@ -149,12 +153,12 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         ':root': {
-          colorScheme: 'light',
+          colorScheme: mode,
         },
         'html, body, #root': {
           minHeight: '100%',
-          background:
-            'linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 45%, #edf5ff 100%)',
+          background: isDark ? 'linear-gradient(135deg, #070a16 0%, #111827 50%, #1e293b 100%)' : 'linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 45%, #edf5ff 100%)',
+          color: isDark ? '#f8fafc' : '#0f172a',
           overflow: 'hidden',
         },
         body: {
@@ -237,9 +241,12 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: '#ffffff',
-          border: '1px solid #e6e6e6',
-          boxShadow: '0 8px 20px rgba(15, 23, 42, 0.05)',
+          backgroundColor: isDark ? '#111827' : '#ffffff',
+          border: isDark ? '1px solid #334155' : '1px solid #e6e6e6',
+          boxShadow: isDark
+            ? '0 8px 20px rgba(0, 0, 0, 0.25)'
+            : '0 8px 20px rgba(15, 23, 42, 0.05)',
+          color: isDark ? '#e2e8f0' : '#0f172a',
           transition: 'transform 0.2s ease, box-shadow 0.25s ease, border-color 0.2s ease',
         },
       },
@@ -247,9 +254,12 @@ export const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          backgroundColor: '#ffffff',
-          border: '1px solid #e6e6e6',
-          boxShadow: '0 8px 20px rgba(15, 23, 42, 0.05)',
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          border: isDark ? '1px solid #334155' : '1px solid #e6e6e6',
+          color: isDark ? '#e2e8f0' : '#0f172a',
+          boxShadow: isDark
+            ? '0 8px 20px rgba(0, 0, 0, 0.22)'
+            : '0 8px 20px rgba(15, 23, 42, 0.05)',
           borderRadius: 12,
           transition: 'transform 0.2s ease, box-shadow 0.25s ease',
           '&:hover': {
@@ -266,21 +276,21 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiOutlinedInput-root': {
-            backgroundColor: '#ffffff',
+            backgroundColor: isDark ? '#1f2937' : '#ffffff',
             borderRadius: 12,
             transition: 'box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease',
             '& fieldset': {
-              borderColor: '#e6e6e6',
+              borderColor: isDark ? '#374151' : '#e6e6e6',
             },
             '&:hover': {
-              backgroundColor: '#ffffff',
+              backgroundColor: isDark ? '#2d3748' : '#ffffff',
             },
             '&:hover fieldset': {
-              borderColor: alpha(primaryMain, 0.3),
+              borderColor: isDark ? '#4b5563' : alpha(primaryMain, 0.3),
             },
             '&.Mui-focused': {
-              boxShadow: `0 0 0 4px ${alpha(primaryMain, 0.12)}`,
-              backgroundColor: '#ffffff',
+              boxShadow: `0 0 0 4px ${alpha(primaryMain, isDark ? 0.15 : 0.12)}`,
+              backgroundColor: isDark ? '#1f2937' : '#ffffff',
             },
             '&.Mui-focused fieldset': {
               borderColor: primaryMain,
@@ -290,6 +300,11 @@ export const theme = createTheme({
           '& .MuiOutlinedInput-input': {
             fontSize: '0.9rem',
             padding: '12px 14px',
+            color: isDark ? '#e2e8f0' : '#0f172a',
+            '&::placeholder': {
+              color: isDark ? '#9ca3af' : '#9ca3af',
+              opacity: isDark ? 0.7 : 1,
+            },
           },
         },
       },
@@ -299,7 +314,33 @@ export const theme = createTheme({
         root: {
           fontSize: '0.88rem',
           fontWeight: 600,
-          color: '#475569',
+          color: isDark ? '#cbd5e1' : '#475569',
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          color: isDark ? '#e2e8f0' : '#0f172a',
+        },
+      },
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: isDark ? '#1f2937' : '#ffffff',
+            '& fieldset': {
+              borderColor: isDark ? '#374151' : '#e6e6e6',
+            },
+            '&:hover fieldset': {
+              borderColor: isDark ? '#4b5563' : alpha(primaryMain, 0.3),
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: primaryMain,
+            },
+          },
         },
       },
     },
@@ -365,7 +406,31 @@ export const theme = createTheme({
       styleOverrides: {
         paper: {
           borderRadius: 16,
-          backgroundColor: '#ffffff',
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          color: isDark ? '#e2e8f0' : '#0f172a',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: isDark ? '#0f172a' : '#ffffff',
+          color: isDark ? '#e2e8f0' : '#0f172a',
+          borderColor: isDark ? '#334155' : '#e6e6e6',
+        },
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          color: isDark ? '#cbd5e1' : '#334155',
+          '&.Mui-selected': {
+            backgroundColor: isDark ? 'rgba(59,130,246,0.24)' : 'rgba(37,99,235,0.08)',
+            color: isDark ? '#93c5fd' : '#2563eb',
+          },
+          '&:hover': {
+            backgroundColor: isDark ? 'rgba(148,163,184,0.24)' : '#f8fafc',
+          },
         },
       },
     },
@@ -379,3 +444,5 @@ export const theme = createTheme({
     },
   },
 });
+}
+

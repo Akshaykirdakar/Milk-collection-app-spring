@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
 import axios from 'axios';
 import { API_URLS } from '../config/api';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import { exportToExcel, exportToPDF, handlePrint } from '../utils/exportUtils';
 
 const MilkReport = ({ fromDate, toDate }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -25,8 +26,8 @@ const MilkReport = ({ fromDate, toDate }) => {
       .finally(() => setLoading(false));
   }, [fromDate, toDate]);
 
-  if (loading) return <div>{t('loading', 'Loading...')}</div>;
-  if (!data || data.length === 0) return <div>{t('noDataAvailable', 'No data available.')}</div>;
+  if (loading) return <CircularProgress sx={{ display: 'block', m: 'auto', mt: 3 }} />;
+  if (!data || data.length === 0) return <Typography sx={{ color: theme.palette.text.primary, p: 2 }}>{t('noDataAvailable', 'No data available.')}</Typography>;
 
   const exportRows = data.flatMap((report) =>
     (report.entries || []).map((entry) => ({
@@ -71,7 +72,7 @@ const MilkReport = ({ fromDate, toDate }) => {
   ];
 
   return (
-    <div className="milk-report-wrapper" style={{ width: '100%' }}>
+    <Box sx={{ width: '100%', backgroundColor: theme.palette.background.default }}>
       <Box className="no-print" sx={{ mb: 2 }}>
         <DataExportToolbar
           onExcel={() =>
@@ -103,18 +104,18 @@ const MilkReport = ({ fromDate, toDate }) => {
       </Box>
 
       {data.map((report, idx) => (
-        <div
+        <Box
           className="report-container"
           key={idx}
-          style={{
+          sx={{
             width: '100%',
             pageBreakAfter: 'always',
           }}
         >
           <SupplierReport report={report} fromDate={fromDate} toDate={toDate} />
-        </div>
+        </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 
