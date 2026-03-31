@@ -11,11 +11,13 @@ const resources = {
     mr: { translation: translationMR },
 };
 
+const savedLanguage = localStorage.getItem('language') || 'en';
+
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // default language
+    lng: savedLanguage,
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false, // react already does escaping

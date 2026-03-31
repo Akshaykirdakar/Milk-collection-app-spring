@@ -63,11 +63,12 @@ export default function TopBar({
     handleClose();
   };
 
-  const [language, setLanguage] = useState(i18n.language || 'en');
+  const [language, setLanguage] = useState(i18n.language || localStorage.getItem('language') || 'en');
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
     setLanguage(lng);
+    localStorage.setItem('language', lng);
     handleClose();
   };
 

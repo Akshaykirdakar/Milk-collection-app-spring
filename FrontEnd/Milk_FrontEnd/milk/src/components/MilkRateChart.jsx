@@ -126,7 +126,7 @@ const MilkRateChart = () => {
     <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', flexDirection: 'column', gap: 3 }}>
       <PageHeader
         title={t('milkRateChartDateWise', 'Milk Rate Chart')}
-        subtitle="Review generated milk rates by effective date range."
+        subtitle={t('reviewAndExport')}
         sx={{ mb: 0 }}
       />
       <SectionCard
@@ -134,10 +134,10 @@ const MilkRateChart = () => {
         sx={{ p: 2.5 }}
       >
       <Stack direction="row" spacing={2} mb={0} flexWrap="wrap">
-        <TextField label={t('fromDate', 'From Date')} type="date" value={fromDateFilter} onChange={(e) => setFromDateFilter(e.target.value)} InputLabelProps={{ shrink: true }} />
-        <TextField label={t('toDate', 'To Date')} type="date" value={toDateFilter} onChange={(e) => setToDateFilter(e.target.value)} InputLabelProps={{ shrink: true }} />
-        <TextField label={t('searchFat', 'Search Fat')} type="number" value={fatSearch} onChange={(e) => setFatSearch(e.target.value)} />
-        <TextField label={t('searchSnf', 'Search SNF')} type="number" value={snfSearch} onChange={(e) => setSnfSearch(e.target.value)} />
+        <TextField label={t('fromDate')} type="date" value={fromDateFilter} onChange={(e) => setFromDateFilter(e.target.value)} InputLabelProps={{ shrink: true }} />
+        <TextField label={t('toDate')} type="date" value={toDateFilter} onChange={(e) => setToDateFilter(e.target.value)} InputLabelProps={{ shrink: true }} />
+        <TextField label={t('searchFat')} type="number" value={fatSearch} onChange={(e) => setFatSearch(e.target.value)} />
+        <TextField label={t('searchSnf')} type="number" value={snfSearch} onChange={(e) => setSnfSearch(e.target.value)} />
         <DataExportToolbar
           onExcel={() =>
             exportToExcel({

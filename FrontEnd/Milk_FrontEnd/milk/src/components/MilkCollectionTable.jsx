@@ -1,6 +1,7 @@
 // MilkCollectionTable.jsx
 import React, { useMemo, useState } from 'react';
 import { Box, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import {
   useReactTable,
   getCoreRowModel,
@@ -13,6 +14,7 @@ import DataExportToolbar from './DataExportToolbar';
 import { exportToExcel, exportToPDF, handlePrint } from '../utils/exportUtils';
 
 export default function MilkCollectionTable({ data }) {
+  const { t } = useTranslation();
   const [sorting, setSorting] = useState([]);
   const [globalFilter, setGlobalFilter] = useState('');
   const [fromDate, setFromDate] = useState('');
@@ -21,49 +23,49 @@ export default function MilkCollectionTable({ data }) {
   const columns = useMemo(
     () => [
       {
-        header: 'Supplier Name',
+        header: t('supplierName'),
         accessorKey: 'supplierName',
       },
       {
-        header: 'Year',
+        header: t('year'),
         accessorKey: 'year',
       },
       {
-        header: 'Date',
+        header: t('date'),
         accessorKey: 'date',
       },
       {
-        header: 'Time',
+        header: t('time'),
         accessorKey: 'time',
-        cell: info => (info.getValue() === 1 ? 'Morning' : info.getValue() === 2 ? 'Evening' : ''),
+        cell: info => (info.getValue() === 1 ? t('morning') : info.getValue() === 2 ? t('evening') : ''),
       },
       {
-        header: 'Animal Type',
+        header: t('animalType'),
         accessorKey: 'animalType',
-        cell: info => (info.getValue() === 1 ? 'Cow' : info.getValue() === 2 ? 'Buffalo' : ''),
+        cell: info => (info.getValue() === 1 ? t('cow') : info.getValue() === 2 ? t('buffalo') : ''),
       },
       {
-        header: 'Liters',
+        header: t('liters'),
         accessorKey: 'liters',
       },
       {
-        header: 'Fat',
+        header: t('fat'),
         accessorKey: 'fat',
       },
       {
-        header: 'CLR',
+        header: t('clr'),
         accessorKey: 'clr',
       },
       {
-        header: 'SNF',
+        header: t('snf'),
         accessorKey: 'snf',
       },
       {
-        header: 'Rate',
+        header: t('rate'),
         accessorKey: 'rate',
       },
       {
-        header: 'Bill Amount',
+        header: t('action'),
         id: 'billAmount',
         cell: info => {
           const rate = info.row.original.rate;
@@ -132,8 +134,8 @@ export default function MilkCollectionTable({ data }) {
   ];
   const exportSummary = [
     { label: 'Records', value: exportRows.length },
-    { label: 'Total Liters', value: totalLiters.toFixed(2) },
-    { label: 'Total Bill Amount', value: totalBill.toFixed(2) },
+    { label: t('totalLiters'), value: totalLiters.toFixed(2) },
+    { label: t('totalBillAmount'), value: totalBill.toFixed(2) },
   ];
 
   return (
@@ -151,7 +153,7 @@ export default function MilkCollectionTable({ data }) {
       >
         <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
           <TextField
-            label="From"
+            label={t('fromDate')}
             type="date"
             size="small"
             value={fromDate}
@@ -159,7 +161,7 @@ export default function MilkCollectionTable({ data }) {
             InputLabelProps={{ shrink: true }}
           />
           <TextField
-            label="To"
+            label={t('toDate')}
             type="date"
             size="small"
             value={toDate}
@@ -170,7 +172,7 @@ export default function MilkCollectionTable({ data }) {
             size="small"
             value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Search all columns..."
+            placeholder={t('searchAllColumns')}
           />
         </Box>
         <DataExportToolbar
@@ -262,7 +264,7 @@ export default function MilkCollectionTable({ data }) {
                 return <td key={col.id || col.accessorKey}>{avgRate.toFixed(2)}</td>;
               }
               if (col === columns[0]) {
-                return <td key={col.id || col.accessorKey} style={{ textAlign: 'right' }}>Total</td>;
+                return <td key={col.id || col.accessorKey} style={{ textAlign: 'right' }}>{t('total')}</td>;
               }
               return <td key={col.id || col.accessorKey}></td>;
             })}
@@ -271,13 +273,13 @@ export default function MilkCollectionTable({ data }) {
       </table>
       <div className="userlist-pagination">
         <button className="pagination-btn" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-          {'<'} Prev
+          {'<'} {t('prev')}
         </button>
         <button className="pagination-btn" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-          Next {'>'}
+          {t('next')} {'>'}
         </button>
         <span className="pagination-info">
-          Page <strong>{table.getState().pagination.pageIndex + 1} of {table.getPageCount()}</strong>
+          {t('page')} <strong>{table.getState().pagination.pageIndex + 1} {t('of')} {table.getPageCount()}</strong>
         </span>
         <select
           className="pagination-select"
@@ -285,7 +287,7 @@ export default function MilkCollectionTable({ data }) {
           onChange={e => table.setPageSize(Number(e.target.value))}
         >
           {[5, 10, 20].map(pageSize => (
-            <option key={pageSize} value={pageSize}>Show {pageSize}</option>
+            <option key={pageSize} value={pageSize}>{t('show')} {pageSize}</option>
           ))}
         </select>
       </div>

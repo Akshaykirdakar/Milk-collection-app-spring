@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 export default function MilkReportSettings({ onSettingsChange }) {
+  const { t } = useTranslation();
   const [heading, setHeading] = useState("Milk Collection Report");
   const [showFat, setShowFat] = useState(true);
   const [showClr, setShowClr] = useState(true);
@@ -109,7 +111,7 @@ export default function MilkReportSettings({ onSettingsChange }) {
         style={{ marginTop: 20 }}
         disabled={loading}
       >
-        Save Settings
+        {t('saveSettings')}
       </button>
 
       {message && <p>{message}</p>}

@@ -1,12 +1,26 @@
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { format, parseISO } from 'date-fns';
+import { enUS, hi } from 'date-fns/locale';
+import i18n from '../i18n';
 
 const PAD = (value) => String(value).padStart(2, '0');
-const PDF_FONT_FILE = 'Mangal.ttf';
-const PDF_FONT_NAME = 'Mangal';
-const PRINT_FONT_STACK = '"Mangal", "Nirmala UI", "Aparajita", Arial, sans-serif';
-let pdfFontBase64Promise;
+const PDF_FONT_FILE_MANGAL = 'Mangal.ttf';
+const PDF_FONT_FILE_NOTO = 'NotoSansMr-Regular.ttf';
+const PDF_FONT_NAME_MANGAL = 'Mangal';
+const PDF_FONT_NAME_NOTO = 'NotoSansMr';
+const PRINT_FONT_STACK = '"Mangal", "Nirmala UI", "Aparajita", "Noto Sans Devanagari", Arial, sans-serif';
+
+let pdfFontBase64PromiseMangal;
+let pdfFontBase64PromiseNoto;
+
+// Get date-fns locale based on i18n language
+const getDateFnsLocale = () => {
+  const lang = i18n.language || 'en';
+  if (lang === 'mr') return hi; // Use Hindi locale for Marathi (date-fns doesn't have Marathi)
+  return enUS;
+};
 
 const sanitizeExportValue = (value) => {
   if (value === null || value === undefined) {
@@ -33,76 +47,150 @@ const arrayBufferToBase64 = (buffer) => {
   return window.btoa(binary);
 };
 
-const loadPdfFontBase64 = async () => {
-  if (!pdfFontBase64Promise) {
+// Load Mangal font (fallback)
+const loadPdfFontBase64Mangal = async () => {
+  if (!pdfFontBase64PromiseMangal) {
     const fontUrl = `${process.env.PUBLIC_URL || ''}/fonts/Mangal.ttf`;
-    pdfFontBase64Promise = fetch(fontUrl)
+    pdfFontBase64PromiseMangal = fetch(fontUrl)
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Failed to load PDF font from ${fontUrl}`);
+          console.warn(`Mangal font not found at ${fontUrl}, will use Noto Sans`);
+          return null;
         }
-
         return response.arrayBuffer();
       })
-      .then((buffer) => arrayBufferToBase64(buffer));
+      .then((buffer) => buffer ? arrayBufferToBase64(buffer) : null)
+      .catch((err) => {
+        console.warn('Error loading Mangal font:', err);
+        return null;
+      });
   }
 
-  return pdfFontBase64Promise;
+  return pdfFontBase64PromiseMangal;
 };
 
-const registerUnicodeFont = async (doc) => {
-  const fontBase64 = await loadPdfFontBase64();
-  doc.addFileToVFS(PDF_FONT_FILE, fontBase64);
-  doc.addFont(PDF_FONT_FILE, PDF_FONT_NAME, 'normal');
-  doc.setFont(PDF_FONT_NAME, 'normal');
+// Load Noto Sans Marathi font (primary)
+const loadPdfFontBase64Noto = async () => {
+  if (!pdfFontBase64PromiseNoto) {
+    const fontUrl = `${process.env.PUBLIC_URL || ''}/fonts/NotoSansMr-Regular.ttf`;
+    pdfFontBase64PromiseNoto = fetch(fontUrl)
+      .then((response) => {
+        if (!response.ok) {
+          console.warn(`Noto Sans Marathi font not found at ${fontUrl}`);
+          return null;
+        }
+        return response.arrayBuffer();
+      })
+      .then((buffer) => buffer ? arrayBufferToBase64(buffer) : null)
+      .catch((err) => {
+        console.warn('Error loading Noto Sans Marathi font:', err);
+        return null;
+      });
+  }
+
+  return pdfFontBase64PromiseNoto;
 };
 
-export const formatDateForDisplay = (value) => {
+// Register Unicode fonts with fallback chain
+const registerUnicodeFonts = async (doc) => {
+  try {
+    // Try Noto Sans first (primary font for Marathi)
+    const notoBase64 = await loadPdfFontBase64Noto();
+    if (notoBase64) {
+      doc.addFileToVFS(PDF_FONT_FILE_NOTO, notoBase64);
+      doc.addFont(PDF_FONT_FILE_NOTO, PDF_FONT_NAME_NOTO, 'normal');
+      doc.setFont(PDF_FONT_NAME_NOTO, 'normal');
+      return PDF_FONT_NAME_NOTO;
+    }
+
+    // Fallback to Mangal
+    const mangalBase64 = await loadPdfFontBase64Mangal();
+    if (mangalBase64) {
+      doc.addFileToVFS(PDF_FONT_FILE_MANGAL, mangalBase64);
+      doc.addFont(PDF_FONT_FILE_MANGAL, PDF_FONT_NAME_MANGAL, 'normal');
+      doc.setFont(PDF_FONT_NAME_MANGAL, 'normal');
+      return PDF_FONT_NAME_MANGAL;
+    }
+
+    // If no fonts found, use default (will work for English)
+    console.warn('Neither Noto Sans Marathi nor Mangal font found, using default');
+    return 'helvetica';
+  } catch (error) {
+    console.error('Error registering fonts:', error);
+    return 'helvetica';
+  }
+};
+
+// i18n-aware date formatting
+export const formatDateForDisplay = (value, language = null) => {
   if (!value) return '';
 
-  const normalized = typeof value === 'string' ? value.trim() : value;
-  const date = new Date(normalized);
+  try {
+    const normalized = typeof value === 'string' ? value.trim() : value;
+    const date = new Date(normalized);
 
-  if (Number.isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
+      return sanitizeExportValue(value);
+    }
+
+    const lang = language || i18n.language || 'en';
+    const locale = lang === 'mr' ? mr : enUS;
+    
+    // Format: DD-MM-YYYY
+    return format(date, 'dd-MM-yyyy', { locale });
+  } catch (error) {
+    console.error('Error formatting date:', error);
     return sanitizeExportValue(value);
   }
-
-  return `${PAD(date.getDate())}-${PAD(date.getMonth() + 1)}-${date.getFullYear()}`;
 };
 
-export const formatDateTimeForDisplay = (value = new Date()) => {
-  const date = value instanceof Date ? value : new Date(value);
+// i18n-aware datetime formatting
+export const formatDateTimeForDisplay = (value = new Date(), language = null) => {
+  try {
+    const date = value instanceof Date ? value : new Date(value);
 
-  if (Number.isNaN(date.getTime())) {
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const lang = language || i18n.language || 'en';
+    const locale = lang === 'mr' ? mr : enUS;
+
+    // Format: DD-MM-YYYY HH:MM
+    return format(date, 'dd-MM-yyyy HH:mm', { locale });
+  } catch (error) {
+    console.error('Error formatting datetime:', error);
     return '';
   }
-
-  return `${formatDateForDisplay(date)} ${PAD(date.getHours())}:${PAD(date.getMinutes())}`;
 };
 
-export const formatCodeValue = (field, value) => {
+// i18n-aware code value formatting
+export const formatCodeValue = (field, value, language = null) => {
+  const { t } = i18n;
+  const lang = language || i18n.language || 'en';
+
   if (field === 'time') {
-    if (Number(value) === 1) return 'Morning';
-    if (Number(value) === 2) return 'Evening';
+    if (Number(value) === 1) return lang === 'mr' ? 'सकाळ' : 'Morning';
+    if (Number(value) === 2) return lang === 'mr' ? 'संध्याकाळ' : 'Evening';
   }
 
   if (field === 'animalType') {
-    if (Number(value) === 1) return 'Cow';
-    if (Number(value) === 2) return 'Buffalo';
+    if (Number(value) === 1) return lang === 'mr' ? 'गाय' : 'Cow';
+    if (Number(value) === 2) return lang === 'mr' ? 'म्हैस' : 'Buffalo';
   }
 
   return value;
 };
 
-export const formatValueByType = (value, type, field) => {
-  const codeFormatted = formatCodeValue(field, value);
+export const formatValueByType = (value, type, field, language = null) => {
+  const codeFormatted = formatCodeValue(field, value, language);
 
   if (codeFormatted === '' || codeFormatted === null || codeFormatted === undefined) {
     return '';
   }
 
   if (type === 'date') {
-    return formatDateForDisplay(codeFormatted);
+    return formatDateForDisplay(codeFormatted, language);
   }
 
   if (type === 'number') {
@@ -132,18 +220,19 @@ const normalizeColumns = (columns = []) =>
       getValue: column.getValue || ((row) => row?.[column.key]),
     }));
 
-const normalizeRows = (rows = [], columns = []) =>
+const normalizeRows = (rows = [], columns = [], language = null) =>
   rows.map((row) =>
-    columns.map((column) => formatValueByType(column.getValue(row), column.type, column.key))
+    columns.map((column) => formatValueByType(column.getValue(row), column.type, column.key, language))
   );
 
-const normalizeObjects = (rows = [], columns = []) =>
+const normalizeObjects = (rows = [], columns = [], language = null) =>
   rows.map((row) =>
     columns.reduce((accumulator, column) => {
       accumulator[column.header] = formatValueByType(
         column.getValue(row),
         column.type,
-        column.key
+        column.key,
+        language
       );
       return accumulator;
     }, {})
@@ -156,11 +245,12 @@ const calculateColumnWidths = (headers, rows) =>
     return { wch: Math.min(maxLength + 2, 30) };
   });
 
-export const exportToExcel = ({ data = [], columns = [], fileBaseName = 'Export', sheetName = 'Report' }) => {
+export const exportToExcel = ({ data = [], columns = [], fileBaseName = 'Export', sheetName = 'Report', language = null }) => {
+  const lang = language || i18n.language || 'en';
   const normalizedColumns = normalizeColumns(columns);
   const headers = normalizedColumns.map((column) => sanitizeExportValue(column.header));
-  const rows = normalizeRows(data, normalizedColumns);
-  const rowObjects = normalizeObjects(data, normalizedColumns);
+  const rows = normalizeRows(data, normalizedColumns, lang);
+  const rowObjects = normalizeObjects(data, normalizedColumns, lang);
   const worksheet = XLSX.utils.json_to_sheet(rowObjects, {
     header: headers,
     skipHeader: false,
@@ -204,22 +294,26 @@ export const exportToPDF = async ({
   fileBaseName = 'Report',
   orientation = 'landscape',
   summary = [],
+  language = null,
 }) => {
+  const lang = language || i18n.language || 'en';
   const normalizedColumns = normalizeColumns(columns);
   const headers = normalizedColumns.map((column) => sanitizeExportValue(column.header));
-  const rows = normalizeRows(data, normalizedColumns);
+  const rows = normalizeRows(data, normalizedColumns, lang);
+  
   const doc = new jsPDF({
     orientation,
     unit: 'pt',
     format: 'a4',
   });
-  await registerUnicodeFont(doc);
+  
+  const fontName = await registerUnicodeFonts(doc);
 
   doc.setFontSize(16);
   doc.text(sanitizeExportValue(title), 40, 34);
   doc.setFontSize(10);
   doc.setTextColor(90);
-  doc.text(sanitizeExportValue(`Exported: ${formatDateTimeForDisplay(new Date())}`), 40, 52);
+  doc.text(sanitizeExportValue(`Exported: ${formatDateTimeForDisplay(new Date(), lang)}`), 40, 52);
 
   autoTable(doc, {
     startY: 66,
@@ -228,7 +322,7 @@ export const exportToPDF = async ({
     margin: { top: 66, right: 40, bottom: 40, left: 40 },
     theme: 'striped',
     styles: {
-      font: PDF_FONT_NAME,
+      font: fontName,
       fontSize: 8,
       cellPadding: 2,
       overflow: 'linebreak',
@@ -237,7 +331,7 @@ export const exportToPDF = async ({
       lineWidth: 0.5,
     },
     headStyles: {
-      font: PDF_FONT_NAME,
+      font: fontName,
       fillColor: [25, 118, 210],
       textColor: 255,
       fontStyle: 'bold',
@@ -254,7 +348,7 @@ export const exportToPDF = async ({
     didDrawPage: ({ cursor }) => {
       if (summary.length > 0) {
         let y = (cursor?.y || 66) + 20;
-        doc.setFont(PDF_FONT_NAME, 'normal');
+        doc.setFont(fontName, 'normal');
         doc.setFontSize(10);
         doc.setTextColor(60);
         summary.forEach((item) => {
@@ -276,9 +370,10 @@ const escapeHtml = (value) =>
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 
-export const handlePrint = ({ data = [], columns = [], title = 'Report', summary = [] }) => {
+export const handlePrint = ({ data = [], columns = [], title = 'Report', summary = [], language = null }) => {
+  const lang = language || i18n.language;
   const normalizedColumns = normalizeColumns(columns);
-  const rows = normalizeRows(data, normalizedColumns);
+  const rows = normalizeRows(data, normalizedColumns, lang);
   const printWindow = window.open('', '_blank', 'width=1200,height=800');
 
   if (!printWindow) return;
@@ -370,7 +465,7 @@ export const handlePrint = ({ data = [], columns = [], title = 'Report', summary
       </head>
       <body>
         <h1>${escapeHtml(title)}</h1>
-        <div class="print-meta">Printed: ${escapeHtml(formatDateTimeForDisplay(new Date()))}</div>
+        <div class="print-meta">Printed: ${escapeHtml(formatDateTimeForDisplay(new Date(), lang))}</div>
         <table>
           <thead>
             <tr>${headerHtml}</tr>

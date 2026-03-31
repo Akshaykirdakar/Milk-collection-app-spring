@@ -275,7 +275,7 @@ export default function Home() {
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 7.5 }}>
             <SectionCard
-              title="Operations Overview"
+              title={t('operationsOverview')}
               subtitle="A quick snapshot of collection activity across the system."
             >
               <Box
@@ -299,10 +299,10 @@ export default function Home() {
                   }}
                 >
                   {[
-                    { label: 'Suppliers', value: stats.totalSuppliers, color: '#2563eb' },
-                    { label: 'Entries', value: stats.totalEntries, color: '#10b981' },
-                    { label: 'Milk', value: stats.totalMilk, color: '#f59e0b' },
-                    { label: 'Today', value: stats.todayEntries, color: '#06b6d4' },
+                    { label: t('chartSuppliers'), value: stats.totalSuppliers, color: '#2563eb' },
+                    { label: t('chartEntries'), value: stats.totalEntries, color: '#10b981' },
+                    { label: t('chartMilk'), value: stats.totalMilk, color: '#f59e0b' },
+                    { label: t('todayEntries'), value: stats.todayEntries, color: '#06b6d4' },
                   ].map((metric) => (
                     <Box key={metric.label}>
                       <Typography sx={{ fontWeight: 700, color: metric.color, fontSize: '1.25rem' }}>

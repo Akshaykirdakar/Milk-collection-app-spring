@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
+import { useTranslation } from "react-i18next";
 import { 
   Box, 
   Paper, 
@@ -72,6 +73,7 @@ const transformData = (rows) => {
 };
 
 const MilkCollectionReport = ({ data }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   // Transform API/CSV data

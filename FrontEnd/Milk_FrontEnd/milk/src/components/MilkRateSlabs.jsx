@@ -177,8 +177,8 @@ const MilkRateSlabs = () => {
                   },
                 }}
               >
-                <MenuItem value="FAT">FAT</MenuItem>
-                <MenuItem value="SNF">SNF</MenuItem>
+                <MenuItem value="FAT">{t('fat')}</MenuItem>
+                <MenuItem value="SNF">{t('snf')}</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -382,7 +382,7 @@ const MilkRateSlabs = () => {
             px: 3,
           }}
         >
-          {t('submitRateSlabs', 'Save Rate Slabs')}
+          {t('saveRateSlabs')}
         </Button>
       </Box>
     </PageContainer>
