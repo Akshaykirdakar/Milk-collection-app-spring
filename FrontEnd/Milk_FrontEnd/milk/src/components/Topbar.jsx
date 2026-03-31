@@ -78,8 +78,8 @@ export default function TopBar({
       elevation={0}
       sx={{
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        background: '#ffffff',
-        borderBottom: '1px solid #e6e6e6',
+        background: (theme) => theme.palette.background.paper,
+        borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
         boxShadow: '0 6px 18px rgba(15, 23, 42, 0.04)',
         width: '100%',
         left: 0,
@@ -99,10 +99,10 @@ export default function TopBar({
             edge="start"
             onClick={onMenuClick}
             sx={{
-              color: '#0f172a',
+              color: (theme) => theme.palette.text.primary,
               transition: 'transform 0.2s ease, background-color 0.2s ease',
               '&:hover': {
-                backgroundColor: '#f8fafc',
+                backgroundColor: (theme) => theme.palette.action.hover,
                 transform: 'translateY(-1px)',
               },
             }}
@@ -115,7 +115,7 @@ export default function TopBar({
             component="div" 
             sx={{ 
               ml: 2,
-              color: '#0f172a',
+              color: (theme) => theme.palette.text.primary,
               fontWeight: 700,
               fontSize: { xs: '1rem', sm: '1.1rem' },
               display: { xs: 'none', sm: 'block' },
@@ -139,10 +139,10 @@ export default function TopBar({
                   minWidth: 100,
                   fontSize: '0.875rem',
                   borderRadius: '10px',
-                  backgroundColor: '#ffffff',
+                  backgroundColor: (theme) => theme.palette.mode === 'dark' ? '#1f2937' : '#ffffff',
                   '& .MuiSelect-select': {
                     py: 0.9,
-                    color: '#0f172a',
+                    color: (theme) => theme.palette.text.primary,
                   },
                   '& .MuiOutlinedInput-notchedOutline': {
                     borderColor: 'rgba(148,163,184,0.24)',

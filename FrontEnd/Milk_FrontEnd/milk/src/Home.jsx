@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Grid, Typography, Button } from '@mui/material';
+import { Box, Grid, Typography, Button, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { API_URLS } from './config/api';
@@ -23,6 +23,7 @@ import {
 export default function Home() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useTheme();
   const [stats, setStats] = useState({
     totalSuppliers: 0,
     totalEntries: 0,
@@ -79,8 +80,10 @@ export default function Home() {
               sx={{
                 p: { xs: 2.5, sm: 3.5 },
                 minHeight: 240,
-                background: 'linear-gradient(135deg, #1d9bf0 0%, #2563eb 100%)',
-                borderColor: '#2596ec',
+                background: theme.palette.mode === 'dark'
+                  ? 'linear-gradient(135deg, #0d1f48 0%, #081428 100%)'
+                  : 'linear-gradient(135deg, #1d9bf0 0%, #2563eb 100%)',
+                borderColor: theme.palette.mode === 'dark' ? '#1e40af' : '#2596ec',
                 color: '#ffffff',
               }}
             >
@@ -228,7 +231,7 @@ export default function Home() {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: '#64748b',
+                          color: theme.palette.text.secondary,
                           fontWeight: 600,
                           fontSize: '0.88rem',
                         }}
@@ -237,7 +240,7 @@ export default function Home() {
                       </Typography>
                       <Typography
                         sx={{
-                          color: '#0f172a',
+                          color: theme.palette.text.primary,
                           fontWeight: 700,
                           fontSize: { xs: '1.8rem', sm: '2rem' },
                           lineHeight: 1.1,
@@ -253,12 +256,16 @@ export default function Home() {
                         width: 46,
                         height: 46,
                         borderRadius: '12px',
-                        background: `linear-gradient(135deg, ${item.tint}, rgba(255,255,255,0.92))`,
+                        background: theme.palette.mode === 'dark'
+                          ? `linear-gradient(135deg, ${item.tint}, rgba(30,41,59,0.92))`
+                          : `linear-gradient(135deg, ${item.tint}, rgba(255,255,255,0.92))`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
-                        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.9), 0 12px 24px ${item.tint}`,
+                        boxShadow: theme.palette.mode === 'dark'
+                          ? `inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 24px ${item.tint}`
+                          : `inset 0 1px 0 rgba(255,255,255,0.9), 0 12px 24px ${item.tint}`,
                       }}
                       >
                       <Icon sx={{ color: item.accent, fontSize: '1.35rem' }} />
@@ -282,9 +289,10 @@ export default function Home() {
                 sx={{
                   height: 280,
                   borderRadius: '12px',
-                  background:
-                    'linear-gradient(180deg, rgba(37,99,235,0.04), rgba(255,255,255,0.6))',
-                  border: '1px solid #eef2f7',
+                  background: theme.palette.mode === 'dark'
+                    ? 'linear-gradient(180deg, rgba(37,99,235,0.08), rgba(59,130,246,0.04))'
+                    : 'linear-gradient(180deg, rgba(37,99,235,0.04), rgba(255,255,255,0.6))',
+                  border: theme.palette.mode === 'dark' ? '1px solid #334155' : '1px solid #eef2f7',
                   p: 2.5,
                   display: 'flex',
                   flexDirection: 'column',
@@ -327,8 +335,9 @@ export default function Home() {
                     sx={{
                       position: 'absolute',
                       inset: 0,
-                      backgroundImage:
-                        'linear-gradient(to right, rgba(226,232,240,0.7) 1px, transparent 1px), linear-gradient(to top, rgba(226,232,240,0.7) 1px, transparent 1px)',
+                      backgroundImage: theme.palette.mode === 'dark'
+                        ? 'linear-gradient(to right, rgba(59,130,246,0.3) 1px, transparent 1px), linear-gradient(to top, rgba(59,130,246,0.3) 1px, transparent 1px)'
+                        : 'linear-gradient(to right, rgba(226,232,240,0.7) 1px, transparent 1px), linear-gradient(to top, rgba(226,232,240,0.7) 1px, transparent 1px)',
                       backgroundSize: '56px 40px',
                     }}
                   />
@@ -346,7 +355,7 @@ export default function Home() {
                     />
                     <path
                       d="M0 160 L0 115 C60 115, 70 118, 120 96 S205 90, 250 108 S345 40, 395 62 S470 135, 520 104 L520 160 Z"
-                      fill="rgba(37,99,235,0.08)"
+                      fill={theme.palette.mode === 'dark' ? 'rgba(59,130,246,0.15)' : 'rgba(37,99,235,0.08)'}
                     />
                   </Box>
                 </Box>
@@ -405,12 +414,26 @@ export default function Home() {
                         fontWeight: 600,
                         textTransform: 'none',
                         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                        backgroundColor: action.variant === 'outlined'
+                          ? theme.palette.mode === 'dark' ? '#1f2937' : '#ffffff'
+                          : undefined,
+                        color: action.variant === 'outlined'
+                          ? theme.palette.mode === 'dark' ? '#60a5fa' : '#2563eb'
+                          : undefined,
+                        border: action.variant === 'outlined'
+                          ? `1.5px solid ${theme.palette.mode === 'dark' ? '#374151' : '#e5e7eb'}`
+                          : undefined,
                         '&:hover': {
                           transform: 'translateY(-2px) scale(1.01)',
                           boxShadow:
                             action.variant === 'contained'
                               ? '0 16px 32px rgba(37, 99, 235, 0.24)'
+                              : theme.palette.mode === 'dark'
+                              ? '0 12px 28px rgba(96, 165, 250, 0.15)'
                               : '0 12px 28px rgba(15, 23, 42, 0.08)',
+                          backgroundColor: action.variant === 'outlined'
+                            ? theme.palette.mode === 'dark' ? '#2d3748' : '#f9fafb'
+                            : undefined,
                         },
                       }}
                     >
@@ -430,7 +453,7 @@ export default function Home() {
               variant="h6"
               sx={{
                 fontWeight: 600,
-                color: '#0f172a',
+                color: theme.palette.text.primary,
                 fontSize: '1.08rem',
               }}
             >
@@ -439,7 +462,7 @@ export default function Home() {
             <Typography
               variant="body2"
               sx={{
-                color: '#6b7280',
+                color: theme.palette.text.secondary,
                 maxWidth: 720,
               }}
             >
@@ -510,12 +533,16 @@ export default function Home() {
                         width: 50,
                         height: 50,
                         borderRadius: '12px',
-                        background: `linear-gradient(135deg, ${feature.bg}, rgba(255,255,255,0.9))`,
+                        background: theme.palette.mode === 'dark'
+                          ? `linear-gradient(135deg, ${feature.bg}, rgba(30,41,59,0.9))`
+                          : `linear-gradient(135deg, ${feature.bg}, rgba(255,255,255,0.9))`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
-                        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.8), 0 10px 22px ${feature.bg}`,
+                        boxShadow: theme.palette.mode === 'dark'
+                          ? `inset 0 1px 0 rgba(255,255,255,0.1), 0 10px 22px ${feature.bg}`
+                          : `inset 0 1px 0 rgba(255,255,255,0.8), 0 10px 22px ${feature.bg}`,
                       }}
                     >
                       <Icon sx={{ color: feature.accent, fontSize: '1.5rem' }} />
@@ -526,7 +553,7 @@ export default function Home() {
                         variant="h6"
                         sx={{
                           fontWeight: 600,
-                          color: '#0f172a',
+                          color: theme.palette.text.primary,
                           mb: 0.75,
                           fontSize: '1rem',
                         }}
@@ -536,7 +563,7 @@ export default function Home() {
                       <Typography
                         variant="body2"
                         sx={{
-                          color: '#6b7280',
+                          color: theme.palette.text.secondary,
                           lineHeight: 1.7,
                         }}
                       >

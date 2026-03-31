@@ -7,11 +7,10 @@ const SIDEBAR_EXPANDED_WIDTH = 240;
 const SIDEBAR_COLLAPSED_WIDTH = 72;
 const TOPBAR_HEIGHT = 64;
 
-export default function AppLayout({ children }) {
+export default function AppLayout({ children, darkMode, toggleDarkMode }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
-  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     setSidebarOpen(!isMobile);
@@ -27,9 +26,6 @@ export default function AppLayout({ children }) {
     }
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode((prev) => !prev);
-  };
 
   const sidebarWidth = isMobile
     ? SIDEBAR_EXPANDED_WIDTH
@@ -45,8 +41,8 @@ export default function AppLayout({ children }) {
         height: '100vh',
         width: '100%',
         overflow: 'hidden',
-        background:
-          'linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 48%, #edf4ff 100%)',
+        background: theme.palette.background.default,
+        color: theme.palette.text.primary,
       }}
     >
       <TopBar
